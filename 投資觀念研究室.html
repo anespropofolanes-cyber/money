@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>投資觀念研究室</title>
+<style>
+:root{
+  --forest:#5a6a3c;
+  --forest-deep:#46532f;
+  --forest-dark:#2e3722;
+  --cream:#f3f1e3;
+  --card:#faf8ee;
+  --ink:#33392a;
+  --ink-soft:#6b7058;
+  --lav:#cdb9ee;
+  --lav-deep:#a98fd6;
+  --c-dgreen:#2e7d4f;
+  --c-lgreen:#94c47d;
+  --c-flat:#cfc9b6;
+  --c-lred:#eda69a;
+  --c-dred:#c0504a;
+  --c-blue:#9cc0dd;
+  --radius:22px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{
+  background:var(--forest);
+  font-family:-apple-system,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
+  color:var(--ink);
+  min-height:100vh;
+}
+.serif{font-family:"Songti TC","Noto Serif TC","PingFang TC",serif;}
+#app{max-width:480px;margin:0 auto;padding:20px 16px 100px;}
+/* header */
+header{text-align:center;padding:10px 0 16px;position:relative;}
+header h1{color:#fdfcf2;font-size:25px;letter-spacing:4px;font-weight:600;}
+header p{color:#dfe3c8;font-size:13px;margin-top:5px;letter-spacing:1px;}
+#gear{
+  position:absolute;right:0;top:8px;background:rgba(253,252,242,.16);
+  border:none;border-radius:50%;width:38px;height:38px;
+  color:#fdfcf2;cursor:pointer;display:flex;align-items:center;justify-content:center;
+}
+#gear svg{width:19px;height:19px;}
+#mascot{
+  position:absolute;left:0;top:0;width:48px;height:48px;pointer-events:none;
+  animation:bob 3.6s ease-in-out infinite;
+}
+@keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);}}
+/* cards */
+.card{
+  background:var(--card);border-radius:var(--radius);
+  padding:20px 18px;margin-bottom:14px;
+  box-shadow:0 2px 10px rgba(30,40,20,.12);
+}
+.card h2{font-size:15px;margin-bottom:12px;color:var(--ink);font-weight:600;}
+.card .hint{font-size:12px;color:var(--ink-soft);margin-top:-8px;margin-bottom:12px;line-height:1.6;}
+.flabel{font-size:14px;font-weight:600;margin:18px 0 9px;}
+.flabel:first-of-type{margin-top:0;}
+.flabel .opt{font-weight:400;color:var(--ink-soft);font-size:12px;}
+/* entry cards (home) */
+.entry{
+  display:flex;align-items:center;gap:14px;width:100%;text-align:left;
+  background:var(--card);border:none;border-radius:var(--radius);
+  padding:18px;margin-bottom:12px;cursor:pointer;font-family:inherit;
+  box-shadow:0 2px 10px rgba(30,40,20,.12);transition:transform .1s;
+}
+.entry:active{transform:scale(.98);}
+.entry .ico{
+  width:46px;height:46px;border-radius:46% 54% 52% 48%/52% 46% 54% 48%;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  box-shadow:inset -3px -4px 8px rgba(0,0,0,.12),inset 3px 4px 8px rgba(255,255,255,.5);
+}
+.entry .ico svg{width:25px;height:25px;color:#41502c;}
+.entry b{font-size:16px;display:block;color:var(--ink);}
+.entry span{font-size:12.5px;color:var(--ink-soft);display:block;margin-top:3px;line-height:1.5;}
+.entry .arrow{margin-left:auto;color:var(--ink-soft);font-size:18px;}
+/* chips */
+.chips{display:flex;flex-wrap:wrap;gap:8px;}
+.chip{
+  border:1.5px solid #d8d4bd;background:#fff;border-radius:999px;
+  padding:9px 15px;font-size:14px;color:var(--ink);cursor:pointer;
+  transition:all .15s;font-family:inherit;
+}
+.chip.sel{background:var(--forest-deep);border-color:var(--forest-deep);color:#fdfcf2;}
+.chip .dot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:-1px;}
+textarea,input[type=text]{
+  width:100%;border:1.5px solid #d8d4bd;border-radius:14px;padding:11px 13px;
+  font-size:15px;font-family:inherit;background:#fff;color:var(--ink);resize:none;outline:none;
+}
+textarea:focus,input:focus{border-color:var(--forest-deep);}
+/* slider */
+.slider-row{display:flex;align-items:center;gap:12px;}
+.slider-row input[type=range]{flex:1;accent-color:var(--forest-deep);}
+.slider-row b{min-width:64px;text-align:right;font-size:15px;}
+/* alloc grid */
+.alloc{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.alloc label{font-size:13px;color:var(--ink-soft);display:block;margin-bottom:4px;}
+.alloc input{
+  width:100%;border:1.5px solid #d8d4bd;border-radius:12px;padding:9px 11px;
+  font-size:15px;font-family:inherit;background:#fff;color:var(--ink);outline:none;
+}
+#allocSum{font-size:13px;margin-top:9px;color:var(--ink-soft);}
+.btn{
+  display:block;width:100%;border:none;border-radius:999px;padding:14px;
+  font-size:16px;font-weight:600;cursor:pointer;font-family:inherit;
+  background:var(--lav);color:#3a2f52;transition:transform .1s;
+}
+.btn:active{transform:scale(.97);}
+.btn.ghost{background:transparent;border:1.5px solid #d8d4bd;color:var(--ink-soft);font-weight:500;}
+.btn.small{width:auto;display:inline-block;padding:9px 18px;font-size:14px;}
+/* flow header */
+.flow-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.flow-head button{
+  background:rgba(253,252,242,.16);border:none;border-radius:50%;width:36px;height:36px;
+  color:#fdfcf2;font-size:17px;cursor:pointer;flex-shrink:0;
+}
+.flow-head h2{color:#fdfcf2;font-size:18px;letter-spacing:1px;font-weight:600;}
+/* prompt result */
+.result-pre{
+  background:#2f3722;color:#e8ebd6;border-radius:16px;padding:16px;
+  font-size:13px;line-height:1.75;white-space:pre-wrap;word-break:break-word;
+  max-height:340px;overflow-y:auto;margin-bottom:14px;
+  font-family:ui-monospace,Menlo,monospace;
+}
+.result-actions{display:flex;flex-direction:column;gap:10px;}
+/* warning */
+.warn{
+  background:#fbf3df;border:1.5px solid #e3cf9e;border-radius:16px;
+  padding:13px 15px;font-size:14px;line-height:1.6;color:#6e5a26;margin-bottom:14px;
+  display:none;
+}
+.warn.show{display:block;}
+/* saved view */
+#savedView{text-align:center;}
+.big-bead{
+  width:88px;height:88px;border-radius:46% 54% 52% 48%/52% 46% 54% 48%;
+  margin:10px auto 14px;position:relative;
+  box-shadow:inset -6px -8px 14px rgba(0,0,0,.18),inset 6px 8px 14px rgba(255,255,255,.45),0 4px 10px rgba(30,40,20,.2);
+  animation:bob 4s ease-in-out infinite;
+}
+.big-bead svg{position:absolute;inset:0;width:100%;height:100%;}
+/* inline svg icons */
+.warn svg,.cicon{width:15px;height:15px;vertical-align:-2.5px;margin-right:5px;color:#8a7a3a;}
+.resolved .cicon{color:var(--ink-soft);}
+.tagline{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-bottom:10px;}
+.tag{background:#ecead8;border-radius:999px;padding:6px 13px;font-size:13px;color:var(--ink);}
+/* tabs */
+nav{
+  position:fixed;bottom:0;left:0;right:0;z-index:30;
+  display:flex;justify-content:center;gap:2px;
+  background:var(--forest-dark);padding:8px 8px calc(8px + env(safe-area-inset-bottom));
+}
+nav button{
+  flex:1;max-width:96px;background:transparent;border:none;color:#b9c19c;
+  font-size:12.5px;padding:9px 2px;border-radius:13px;cursor:pointer;font-family:inherit;
+  line-height:1.3;
+}
+nav button .nico{display:block;margin:0 auto 3px;width:19px;height:19px;}
+nav button .nico svg{width:19px;height:19px;display:block;}
+nav button.on{background:rgba(253,252,242,.14);color:#fdfcf2;font-weight:600;}
+.screen{display:none;}
+.screen.on{display:block;animation:fade .25s;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+/* calendar */
+.cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.cal-head h2{font-size:17px;}
+.cal-head button{
+  background:#ecead8;border:none;border-radius:50%;width:34px;height:34px;
+  font-size:16px;cursor:pointer;color:var(--ink);
+}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center;}
+.cal-grid .wd{font-size:11px;color:var(--ink-soft);padding:4px 0;}
+.cal-cell{
+  aspect-ratio:1;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:12px;color:var(--ink-soft);cursor:pointer;position:relative;border:none;background:transparent;font-family:inherit;
+}
+.cal-cell .bead{
+  position:absolute;inset:3px;border-radius:46% 54% 52% 48%/52% 46% 54% 48%;
+  box-shadow:inset -2px -3px 5px rgba(0,0,0,.15),inset 2px 3px 5px rgba(255,255,255,.4);
+}
+.cal-cell span{position:relative;z-index:1;}
+.cal-cell.has span{color:#fff;font-weight:600;text-shadow:0 1px 2px rgba(0,0,0,.3);}
+.cal-cell.today{outline:2px solid var(--forest-deep);outline-offset:1px;}
+#dayDetail{margin-top:14px;display:none;}
+#dayDetail.show{display:block;}
+.stats{display:flex;gap:10px;margin-top:4px;}
+.stat{flex:1;background:#ecead8;border-radius:16px;padding:12px 8px;text-align:center;}
+.stat b{display:block;font-size:20px;}
+.stat span{font-size:12px;color:var(--ink-soft);}
+/* cool list */
+.cool-item{
+  background:#fff;border:1.5px solid #e3dfc8;border-radius:18px;
+  padding:14px 16px;margin-bottom:10px;
+}
+.cool-item h3{font-size:16px;margin-bottom:4px;}
+.cool-item .meta{font-size:13px;color:var(--ink-soft);margin-bottom:8px;}
+.cool-item .countdown{font-size:13px;font-weight:600;color:#8a6d2f;}
+.cool-item.expired .countdown{color:var(--c-dred);}
+.cool-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+.cool-actions button{
+  border:1.5px solid #d8d4bd;background:#faf8ee;border-radius:999px;
+  padding:8px 14px;font-size:13px;cursor:pointer;font-family:inherit;color:var(--ink);
+}
+.cool-item .resolved{font-size:14px;font-weight:600;margin-top:6px;}
+.empty{text-align:center;color:var(--ink-soft);font-size:14px;padding:26px 10px;line-height:1.7;}
+/* history */
+.hist-item{
+  background:#fff;border:1.5px solid #e3dfc8;border-radius:18px;
+  padding:14px 16px;margin-bottom:10px;cursor:pointer;
+}
+.hist-item .badge{
+  display:inline-block;font-size:11.5px;border-radius:999px;padding:3px 10px;
+  background:#ecead8;color:var(--ink-soft);margin-bottom:6px;
+}
+.hist-item h3{font-size:15px;margin-bottom:3px;}
+.hist-item .meta{font-size:12px;color:var(--ink-soft);}
+.hist-item .hist-body{display:none;margin-top:10px;}
+.hist-item.open .hist-body{display:block;}
+/* modal */
+#modalBg{
+  display:none;position:fixed;inset:0;background:rgba(20,26,12,.55);z-index:50;
+  align-items:flex-end;justify-content:center;
+}
+#modalBg.show{display:flex;}
+#modal{
+  background:var(--card);border-radius:24px 24px 0 0;width:100%;max-width:480px;
+  padding:24px 20px calc(26px + env(safe-area-inset-bottom));
+}
+#modal h2{font-size:17px;margin-bottom:16px;text-align:center;}
+#modal .btn{margin-bottom:10px;}
+.toast{
+  position:fixed;left:50%;bottom:110px;transform:translateX(-50%);
+  background:var(--forest-dark);color:#fdfcf2;border-radius:999px;
+  padding:10px 22px;font-size:14px;z-index:60;opacity:0;transition:opacity .25s;pointer-events:none;
+  white-space:nowrap;
+}
+.toast.show{opacity:1;}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <svg id="mascot" viewBox="0 0 48 48" aria-hidden="true">
+      <defs>
+        <radialGradient id="mGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#fff6cf" stop-opacity=".9"/>
+          <stop offset="70%" stop-color="#fff6cf" stop-opacity=".25"/>
+          <stop offset="100%" stop-color="#fff6cf" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <circle cx="24" cy="23" r="22" fill="url(#mGlow)"/>
+      <path d="M24 36c-2.2 0-3.2 1.6-3.2 3.4M27 35.6c.8 1.5.6 3-.4 4.4" stroke="#3a4128" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <ellipse cx="24" cy="23.5" rx="12.5" ry="12" fill="#f2e6ae"/>
+      <ellipse cx="24" cy="23.5" rx="12.5" ry="12" fill="none" stroke="#e4d391" stroke-width=".8"/>
+      <path d="M18.4 23.2c.9 1 2.3 1 3.2 0M26.4 23.2c.9 1 2.3 1 3.2 0" stroke="#56502f" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <circle cx="17.3" cy="26.6" r="1.7" fill="#ecc9a4" opacity=".75"/>
+      <circle cx="30.7" cy="26.6" r="1.7" fill="#ecc9a4" opacity=".75"/>
+      <path d="M22.9 27.6c.7.6 1.5.6 2.2 0" stroke="#56502f" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+    </svg>
+    <h1 class="serif">投資觀念研究室</h1>
+    <p>慢慢來，比較快。</p>
+    <button id="gear" onclick="openModal()" aria-label="設定">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+        <path d="M4 7h8.5M18.5 7H20M4 12h2.5M10.5 12H20M4 17h11M19 17h1"/>
+        <circle cx="15.5" cy="7" r="2"/><circle cx="7.5" cy="12" r="2"/><circle cx="17" cy="17" r="2"/>
+      </svg>
+    </button>
+  </header>
+
+  <!-- ============ 首頁（工具入口） ============ -->
+  <section id="scr-home" class="screen on">
+    <div id="weekRule" class="card" style="display:none;padding:14px 18px;">
+      <div style="font-size:12px;color:var(--ink-soft);margin-bottom:4px;">本週規則</div>
+      <div id="weekRuleText" style="font-size:15px;font-weight:600;"></div>
+    </div>
+
+    <button class="entry" onclick="goFlow('buy')">
+      <div class="ico" style="background:#cfe3c0;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 21v-8"/>
+          <path d="M12 13C12 9 9.2 6.8 5 6.8c0 4.2 2.8 6.2 7 6.2z"/>
+          <path d="M12 11c0-3.4 2.4-5.2 6-5.2 0 3.6-2.4 5.2-6 5.2z"/>
+          <path d="M8 21h8"/>
+        </svg>
+      </div>
+      <div><b>買入前檢查</b><span>進場前 1 分鐘，先過五關。</span></div>
+      <div class="arrow">›</div>
+    </button>
+    <button class="entry" onclick="goFlow('sell')">
+      <div class="ico" style="background:#f2d9c8;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 4.5c-7.5 0-12.5 3.2-12.5 9.3 0 2.6 1.7 4.2 4.2 4.2 6.2 0 8.3-6.3 8.3-13.5z"/>
+          <path d="M5.5 19.5c2-4.5 5-7.8 9.5-10"/>
+          <path d="M3.5 13.5c.8.5 1.6.5 2.4 0"/>
+        </svg>
+      </div>
+      <div><b>賣出前檢查</b><span>是理性調整，還是情緒反應？</span></div>
+      <div class="arrow">›</div>
+    </button>
+    <button class="entry" onclick="goFlow('risk')">
+      <div class="ico" style="background:#d8e4ec;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <ellipse cx="12" cy="18" rx="7.2" ry="3"/>
+          <ellipse cx="11.6" cy="12.6" rx="5" ry="2.4"/>
+          <ellipse cx="12.2" cy="8.2" rx="3.2" ry="1.9"/>
+        </svg>
+      </div>
+      <div><b>持倉風險檢查</b><span>看看組合有沒有悄悄偏掉。</span></div>
+      <div class="arrow">›</div>
+    </button>
+    <button class="entry" onclick="goFlow('weekly')">
+      <div class="ico" style="background:#e8ddf2;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19.5 14.2A8.3 8.3 0 1 1 9.8 4.5a6.8 6.8 0 0 0 9.7 9.7z"/>
+          <path d="M17.5 4.5l.5 1.4 1.4.5-1.4.5-.5 1.4-.5-1.4-1.4-.5 1.4-.5z"/>
+        </svg>
+      </div>
+      <div><b>每週回顧</b><span>3 分鐘，看見自己的決策模式。</span></div>
+      <div class="arrow">›</div>
+    </button>
+    <button class="entry" onclick="goFlow('round')">
+      <div class="ico" style="background:#ece5c8;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3.5c1.8 2.8 4.5 4.6 4.5 8.2a4.5 4.5 0 0 1-9 0c0-1.8.8-3.2 1.7-4.6.3 1.1 1 1.9 1.9 2.4-.2-2.2.1-4.2.9-6z"/>
+          <path d="M4.5 20.5l6-2M19.5 20.5l-6-2M4.5 18l15 2.5"/>
+        </svg>
+      </div>
+      <div><b>觀念圓桌</b><span>讓不同投資框架，替你吵一架。</span></div>
+      <div class="arrow">›</div>
+    </button>
+    <button class="entry" onclick="goFlow('daily')">
+      <div class="ico" style="background:#dce8d2;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9.5" cy="9" r="3.4"/>
+          <path d="M9.5 3.2v1.4M3.7 9h1.4M5.4 4.9l1 1M14.6 4.9l-1 1"/>
+          <path d="M8 17.5a4 4 0 0 1 7.5-1.6 3 3 0 1 1 1 5.6H10a2.5 2.5 0 0 1-2-4z"/>
+        </svg>
+      </div>
+      <div><b>每日市場背景</b><span>30 秒記下今天的市場氣氛。</span></div>
+      <div class="arrow">›</div>
+    </button>
+  </section>
+
+  <!-- ============ 買入前檢查 ============ -->
+  <section id="scr-buy" class="screen">
+    <div class="flow-head"><button onclick="goHome()">‹</button><h2 class="serif">買入前檢查</h2></div>
+    <div id="buy-form">
+      <div class="card">
+        <div class="flabel">標的名稱</div>
+        <input type="text" id="buyName" placeholder="例如：00679B、TSMC">
+        <div class="flabel">資產類型</div>
+        <div class="chips" id="buy-type"></div>
+        <div class="flabel">買入原因</div>
+        <div class="chips" id="buy-reason"></div>
+        <div class="flabel">預計持有時間</div>
+        <div class="chips" id="buy-hold"></div>
+        <div class="flabel">如果買入後下跌 15%，你會？</div>
+        <div class="chips" id="buy-drop"></div>
+        <div class="flabel">這筆交易占總資產比例</div>
+        <div class="slider-row">
+          <input type="range" id="buyPct" min="0" max="100" value="10" step="1" oninput="document.getElementById('buyPctV').textContent='約 '+this.value+'%'">
+          <b id="buyPctV">約 10%</b>
+        </div>
+        <div class="flabel">是否已有退出條件</div>
+        <div class="chips" id="buy-exit"></div>
+      </div>
+      <button class="btn" onclick="genBuy()">產生提示語</button>
+    </div>
+    <div id="buy-result" style="display:none;">
+      <div class="card">
+        <h2>提示語已準備好</h2>
+        <p class="hint">複製後貼到 ChatGPT / Claude / Gemini，讓 AI 幫你檢查盲點。已自動存入歷史紀錄。</p>
+        <pre class="result-pre" id="buy-pre"></pre>
+        <div class="result-actions">
+          <button class="btn" onclick="copyText(document.getElementById('buy-pre').textContent)">複製提示語</button>
+          <button class="btn ghost" onclick="buyToCool()">順手放進 48 小時冷靜清單</button>
+          <button class="btn ghost" onclick="goHome()">完成</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 賣出前檢查 ============ -->
+  <section id="scr-sell" class="screen">
+    <div class="flow-head"><button onclick="goHome()">‹</button><h2 class="serif">賣出前檢查</h2></div>
+    <div id="sell-form">
+      <div class="card">
+        <div class="flabel">標的名稱</div>
+        <input type="text" id="sellName" placeholder="你想賣出的標的">
+        <div class="flabel">原本買入理由 <span class="opt">（一句話就好）</span></div>
+        <input type="text" id="sellWhy" placeholder="例如：長期配置、看好產業">
+        <div class="flabel">現在想賣的原因</div>
+        <div class="chips" id="sell-reason"></div>
+        <div class="flabel">目前損益狀態</div>
+        <div class="chips" id="sell-pnl"></div>
+        <div class="flabel">原本買入理由是否失效？</div>
+        <div class="chips" id="sell-invalid"></div>
+        <div class="flabel">如果賣出後繼續上漲，會後悔嗎？</div>
+        <div class="chips" id="sell-regret"></div>
+      </div>
+      <button class="btn" onclick="genSell()">產生提示語</button>
+    </div>
+    <div id="sell-result" style="display:none;">
+      <div class="card">
+        <h2>提示語已準備好</h2>
+        <p class="hint">複製後貼到 ChatGPT / Claude / Gemini。已自動存入歷史紀錄。</p>
+        <pre class="result-pre" id="sell-pre"></pre>
+        <div class="result-actions">
+          <button class="btn" onclick="copyText(document.getElementById('sell-pre').textContent)">複製提示語</button>
+          <button class="btn ghost" onclick="goHome()">完成</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 持倉風險檢查 ============ -->
+  <section id="scr-risk" class="screen">
+    <div class="flow-head"><button onclick="goHome()">‹</button><h2 class="serif">持倉風險檢查</h2></div>
+    <div id="risk-form">
+      <div class="card">
+        <div class="flabel">目前資產配置 <span class="opt">（大概就好，單位 %）</span></div>
+        <div class="alloc">
+          <div><label>現金</label><input type="number" id="al-cash" min="0" max="100" value="10" oninput="allocSum()"></div>
+          <div><label>ETF</label><input type="number" id="al-etf" min="0" max="100" value="40" oninput="allocSum()"></div>
+          <div><label>單一股票</label><input type="number" id="al-stock" min="0" max="100" value="30" oninput="allocSum()"></div>
+          <div><label>債券</label><input type="number" id="al-bond" min="0" max="100" value="15" oninput="allocSum()"></div>
+          <div><label>其他</label><input type="number" id="al-other" min="0" max="100" value="5" oninput="allocSum()"></div>
+        </div>
+        <div id="allocSum"></div>
+        <div class="flabel">最大單一標的占總資產比例</div>
+        <div class="slider-row">
+          <input type="range" id="riskMax" min="0" max="100" value="10" step="1" oninput="document.getElementById('riskMaxV').textContent='約 '+this.value+'%'">
+          <b id="riskMaxV">約 10%</b>
+        </div>
+        <div class="flabel">是否過度集中某個產業或國家？</div>
+        <div class="chips" id="risk-conc"></div>
+        <div class="flabel">可承受的最大跌幅</div>
+        <div class="chips" id="risk-dd"></div>
+        <div class="flabel">未來 12 個月需要用到這筆錢嗎？</div>
+        <div class="chips" id="risk-cash12"></div>
+      </div>
+      <button class="btn" onclick="genRisk()">產生提示語</button>
+    </div>
+    <div id="risk-result" style="display:none;">
+      <div class="card">
+        <h2>提示語已準備好</h2>
+        <p class="hint">複製後貼到 ChatGPT / Claude / Gemini。已自動存入歷史紀錄。</p>
+        <pre class="result-pre" id="risk-pre"></pre>
+        <div class="result-actions">
+          <button class="btn" onclick="copyText(document.getElementById('risk-pre').textContent)">複製提示語</button>
+          <button class="btn ghost" onclick="goHome()">完成</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 每週回顧 ============ -->
+  <section id="scr-weekly" class="screen">
+    <div class="flow-head"><button onclick="goHome()">‹</button><h2 class="serif">每週回顧</h2></div>
+    <div id="weekly-form">
+      <div class="card">
+        <p class="hint" style="margin-top:0;">過去 7 天的「今日色票」紀錄會自動附在提示語裡，不用重填。</p>
+        <div class="flabel">本週有交易嗎？</div>
+        <div class="chips" id="wk-trade"></div>
+        <div class="flabel">本週最想檢討的一筆交易 <span class="opt">（可跳過）</span></div>
+        <input type="text" id="wkReview" placeholder="例如：週三追高買了 AI 股">
+        <div class="flabel">本週整體情緒</div>
+        <div class="chips" id="wk-mood"></div>
+        <div class="flabel">本週最影響你的市場事件 <span class="opt">（可跳過）</span></div>
+        <input type="text" id="wkEvent" placeholder="例如：降息預期升溫">
+        <div class="flabel">下週最想提醒自己的規則</div>
+        <div class="chips" id="wk-rule"></div>
+        <input type="text" id="wkRuleCustom" placeholder="或自己寫一條…" style="margin-top:10px;">
+      </div>
+      <button class="btn" onclick="genWeekly()">產生提示語</button>
+    </div>
+    <div id="weekly-result" style="display:none;">
+      <div class="card">
+        <h2>提示語已準備好</h2>
+        <p class="hint">複製後貼到 ChatGPT / Claude / Gemini。你選的下週規則已釘在首頁。</p>
+        <pre class="result-pre" id="weekly-pre"></pre>
+        <div class="result-actions">
+          <button class="btn" onclick="copyText(document.getElementById('weekly-pre').textContent)">複製提示語</button>
+          <button class="btn ghost" onclick="goHome()">完成</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 觀念圓桌 ============ -->
+  <section id="scr-round" class="screen">
+    <div class="flow-head"><button onclick="goHome()">‹</button><h2 class="serif">觀念圓桌</h2></div>
+    <div id="round-form">
+      <div class="card">
+        <div class="flabel">邀請哪些投資框架入座？<span class="opt">（選 2–5 個）</span></div>
+        <div class="chips" id="rt-frames"></div>
+        <div class="flabel">你想討論的問題</div>
+        <textarea id="rtQ" rows="3" placeholder="例如：我想買長債 ETF／科技股漲很多還能不能加碼？"></textarea>
+      </div>
+      <button class="btn" onclick="genRound()">開始圓桌・產生提示語</button>
+    </div>
+    <div id="round-result" style="display:none;">
+      <div class="card">
+        <h2>提示語已準備好</h2>
+        <p class="hint">複製後貼到 ChatGPT / Claude / Gemini。已自動存入歷史紀錄。</p>
+        <pre class="result-pre" id="round-pre"></pre>
+        <div class="result-actions">
+          <button class="btn" onclick="copyText(document.getElementById('round-pre').textContent)">複製提示語</button>
+          <button class="btn ghost" onclick="goHome()">完成</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 每日市場背景 ============ -->
+  <section id="scr-daily" class="screen">
+    <div class="flow-head"><button onclick="goHome()">‹</button><h2 class="serif">每日市場背景</h2></div>
+    <div id="daily-form">
+      <div class="card">
+        <div class="flabel">今日市場大事 <span class="opt">（一兩句就好）</span></div>
+        <textarea id="dailyNews" rows="2" placeholder="例如：美股科技股大漲，市場押注降息"></textarea>
+        <div class="flabel">今日市場氣氛</div>
+        <div class="chips" id="dl-vibe"></div>
+        <div class="flabel">今天你想交易嗎？</div>
+        <div class="chips" id="dl-want"></div>
+      </div>
+      <button class="btn" onclick="genDaily()">產生今日背景摘要</button>
+    </div>
+    <div id="daily-result" style="display:none;">
+      <div class="card">
+        <h2>今日背景已記錄</h2>
+        <p class="hint">需要時複製給 AI，或留著日後回顧當天的氣氛。已存入歷史紀錄。</p>
+        <pre class="result-pre" id="daily-pre"></pre>
+        <div class="result-actions">
+          <button class="btn" onclick="copyText(document.getElementById('daily-pre').textContent)">複製提示語</button>
+          <button class="btn ghost" onclick="goHome()">完成</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 今日色票 ============ -->
+  <section id="scr-today" class="screen">
+    <div id="recordForm">
+      <div class="card">
+        <h2 id="todayDate"></h2>
+        <p class="hint">15 秒，記下今天的狀態就好。</p>
+        <h2>今天帳戶顏色</h2>
+        <div class="chips" id="g-color"></div>
+        <h2 style="margin-top:18px;">今天心情</h2>
+        <div class="chips" id="g-mood"></div>
+        <h2 style="margin-top:18px;">今天盤勢</h2>
+        <div class="chips" id="g-market"></div>
+        <h2 style="margin-top:18px;">今天行為</h2>
+        <div class="chips" id="g-action"></div>
+        <h2 style="margin-top:18px;">一句話備註<span style="font-weight:400;color:var(--ink-soft);">（可不填）</span></h2>
+        <textarea id="note" rows="2" placeholder="例如：差點追高，忍住了。"></textarea>
+      </div>
+      <div id="impulseWarn" class="warn"></div>
+      <button class="btn" onclick="saveToday()">把今天放進罐子</button>
+    </div>
+    <div id="savedView" style="display:none;">
+      <div class="card">
+        <h2 id="savedDate" style="text-align:center;"></h2>
+        <div class="big-bead" id="savedBead">
+          <svg viewBox="0 0 88 88" aria-hidden="true">
+            <path d="M30 42c2 2.4 5.4 2.4 7.4 0M50.6 42c2 2.4 5.4 2.4 7.4 0" stroke="rgba(30,30,20,.55)" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+            <path d="M40.5 52c2.2 1.8 4.8 1.8 7 0" stroke="rgba(30,30,20,.5)" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+            <circle cx="26" cy="49" r="4" fill="rgba(255,255,255,.3)"/>
+            <circle cx="62" cy="49" r="4" fill="rgba(255,255,255,.3)"/>
+          </svg>
+        </div>
+        <div class="tagline" id="savedTags"></div>
+        <p id="savedNote" style="font-size:14px;color:var(--ink-soft);text-align:center;margin:6px 0 14px;line-height:1.6;"></p>
+        <div id="savedWarn" class="warn" style="margin-bottom:14px;"></div>
+        <button class="btn ghost" onclick="editToday()">修改今天的紀錄</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 月曆 ============ -->
+  <section id="scr-cal" class="screen">
+    <div class="card">
+      <div class="cal-head">
+        <button onclick="moveMonth(-1)">‹</button>
+        <h2 class="serif" id="calTitle"></h2>
+        <button onclick="moveMonth(1)">›</button>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+      <div class="stats" id="calStats"></div>
+    </div>
+    <div class="card" id="dayDetail"></div>
+  </section>
+
+  <!-- ============ 冷靜清單 ============ -->
+  <section id="scr-cool" class="screen">
+    <div class="card">
+      <h2>放一個想買的標的進來</h2>
+      <p class="hint">想買但理由還不清楚？先冷靜 48 小時，到期再決定。</p>
+      <input type="text" id="coolName" placeholder="標的名稱，例如：00679B" style="margin-bottom:12px;">
+      <h2>想買的原因</h2>
+      <div class="chips" id="g-coolReason"></div>
+      <h2 style="margin-top:16px;">冷靜多久</h2>
+      <div class="chips" id="g-coolHours"></div>
+      <button class="btn" style="margin-top:18px;" onclick="addCool()">放進冷靜清單</button>
+    </div>
+    <div id="coolList"></div>
+  </section>
+
+  <!-- ============ 歷史紀錄 ============ -->
+  <section id="scr-hist" class="screen">
+    <div id="histList"></div>
+  </section>
+</div>
+
+<nav>
+  <button id="tab-home" class="on" onclick="go('home')">
+    <span class="nico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4c-8 0-13.5 3.6-13.5 10 0 2.8 1.8 4.5 4.5 4.5 6.6 0 9-6.8 9-14.5z"/><path d="M5 20.5C7 15.5 10.5 11.5 15 9"/></svg></span>工具</button>
+  <button id="tab-today" onclick="go('today')">
+    <span class="nico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8.2" y="3" width="7.6" height="3.6" rx="1.4"/><path d="M9.5 6.6C7.8 8.2 7 10 7 12.2V17a4 4 0 0 0 4 4h2a4 4 0 0 0 4-4v-4.8c0-2.2-.8-4-2.5-5.6"/><circle cx="12" cy="16" r="1.8" fill="currentColor" stroke="none"/></svg></span>今日</button>
+  <button id="tab-cal" onclick="go('cal')">
+    <span class="nico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5.5" width="16" height="15" rx="3.5"/><path d="M4 10.5h16M9 3.2v4M15 3.2v4"/><circle cx="9" cy="15.2" r="1.3" fill="currentColor" stroke="none"/><circle cx="14.8" cy="15.2" r="1.3" fill="currentColor" stroke="none"/></svg></span>月曆</button>
+  <button id="tab-cool" onclick="go('cool')">
+    <span class="nico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11.5h6V19a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z"/><path d="M12 8.6c1.6-1.3 1.6-3 0-4.6-1.6 1.6-1.6 3.3 0 4.6z"/><path d="M12 8.6v2.9"/></svg></span>冷靜</button>
+  <button id="tab-hist" onclick="go('hist')">
+    <span class="nico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5.5A2.5 2.5 0 0 1 7.5 3H19v15H7.5A2.5 2.5 0 0 0 5 20.5z"/><path d="M5 20.5V5.5M19 18v3H7.5"/><path d="M9.5 7.5h6M9.5 11h4"/></svg></span>歷史</button>
+</nav>
+
+<div id="modalBg" onclick="if(event.target===this)closeModal()">
+  <div id="modal">
+    <h2>資料與備份</h2>
+    <button class="btn ghost" onclick="exportJSON()">匯出 JSON 備份</button>
+    <button class="btn ghost" onclick="document.getElementById('importFile').click()">匯入 JSON 備份</button>
+    <input type="file" id="importFile" accept=".json" style="display:none" onchange="importJSON(this)">
+    <button class="btn ghost" style="color:var(--c-dred);border-color:var(--c-lred);" onclick="clearAll()">清除所有資料</button>
+    <p style="font-size:12px;color:var(--ink-soft);text-align:center;margin-top:8px;line-height:1.7;">
+      所有資料只存在這台裝置的瀏覽器裡，<br>不會上傳到任何伺服器。建議定期匯出備份。<br><br>
+      本工具不提供投資建議，僅協助你檢查自己的決策。
+    </p>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================= 資料 ================= */
+const KEY='invest-lab-v1';
+let db=load();
+function load(){
+  let d;
+  try{d=JSON.parse(localStorage.getItem(KEY))||{};}catch(e){d={};}
+  d.records=d.records||{};d.cool=d.cool||[];d.weekRule=d.weekRule||'';d.history=d.history||[];
+  return d;
+}
+function save(){localStorage.setItem(KEY,JSON.stringify(db));}
+function uid(){return Date.now()*1000+Math.floor(Math.random()*1000);}
+
+const COLORS=[
+  {k:'深綠',hex:'#2e7d4f',d:'大賺'},
+  {k:'淺綠',hex:'#94c47d',d:'小賺'},
+  {k:'持平',hex:'#cfc9b6',d:'持平'},
+  {k:'淺紅',hex:'#eda69a',d:'小虧'},
+  {k:'深紅',hex:'#c0504a',d:'大虧'},
+  {k:'沒看盤',hex:'#9cc0dd',d:'今天沒看盤'},
+];
+const MOODS=['平穩','焦慮','興奮','後悔','無感'];
+const MARKETS=['上漲','下跌','震盪','急漲','急跌','沒注意'];
+const ACTIONS=['沒動作','想買','想賣','有買','有賣'];
+const COOL_REASONS=['新聞題材','跌深','朋友推薦','技術突破','長期看好','手癢'];
+const COOL_HOURS=[{k:'24 小時',h:24},{k:'48 小時',h:48},{k:'72 小時',h:72},{k:'一週',h:168}];
+
+/* ================= 工具 ================= */
+function iso(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function todayISO(){return iso(new Date());}
+function fmt(dISO){const[y,m,d]=dISO.split('-');return `${y} 年 ${+m} 月 ${+d} 日`;}
+function colorOf(k){const f=COLORS.find(c=>c.k===k);return f?f.hex:'#cfc9b6';}
+function esc(s){return String(s).replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));}
+function toast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(t._tm);t._tm=setTimeout(()=>t.classList.remove('show'),2200);
+}
+function copyText(txt){
+  const done=()=>toast('已複製，貼到 ChatGPT / Claude 即可');
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(done).catch(()=>fallbackCopy(txt,done));
+  }else fallbackCopy(txt,done);
+}
+function fallbackCopy(txt,done){
+  const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);
+  ta.select();try{document.execCommand('copy');done();}catch(e){toast('複製失敗，請長按文字手動複製');}
+  ta.remove();
+}
+
+/* ================= SVG 圖標 ================= */
+const SVGI={
+  leaf:'<svg class="cicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4c-8 0-13.5 3.6-13.5 10 0 2.8 1.8 4.5 4.5 4.5 6.6 0 9-6.8 9-14.5z"/><path d="M5 20.5C7 15.5 10.5 11.5 15 9"/></svg>',
+  candle:'<svg class="cicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11.5h6V19a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z"/><path d="M12 8.6c1.6-1.3 1.6-3 0-4.6-1.6 1.6-1.6 3.3 0 4.6z"/><path d="M12 8.6v2.9"/></svg>',
+  clock:'<svg class="cicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3.2 2"/></svg>',
+  cart:'<svg class="cicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9.5" cy="19.5" r="1.4"/><circle cx="16.5" cy="19.5" r="1.4"/><path d="M3.5 4.5h2L8 15h9.5l2-7.5H6.2"/></svg>',
+  eye:'<svg class="cicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12s3.4-6 9-6 9 6 9 6-3.4 6-9 6-9-6-9-6z"/><circle cx="12" cy="12" r="2.6"/></svg>',
+};
+const COOL_ICONS={'還想買':SVGI.cart,'不想了':SVGI.leaf,'要再看':SVGI.eye};
+
+/* ================= 通用 chips ================= */
+function makeChips(elId,opts,st,key,cfg){
+  cfg=cfg||{};
+  const el=document.getElementById(elId);el.innerHTML='';
+  opts.forEach(o=>{
+    const label=typeof o==='string'?o:o.k;
+    const b=document.createElement('button');b.className='chip';
+    b.innerHTML=cfg.fmt?cfg.fmt(o):label;
+    b.onclick=()=>{
+      if(cfg.multi){
+        st[key]=st[key]||[];
+        const i=st[key].indexOf(label);
+        if(i>=0){st[key].splice(i,1);b.classList.remove('sel');}
+        else{
+          if(cfg.max&&st[key].length>=cfg.max){toast('最多選 '+cfg.max+' 個');return;}
+          st[key].push(label);b.classList.add('sel');
+        }
+      }else{
+        st[key]=(typeof o==='string')?o:(cfg.valueKey?o[cfg.valueKey]:o.k);
+        [...el.children].forEach(c=>c.classList.remove('sel'));
+        b.classList.add('sel');
+        if(cfg.onPick)cfg.onPick();
+      }
+    };
+    el.appendChild(b);
+  });
+}
+
+/* ================= 流程狀態 ================= */
+const F={buy:{},sell:{},risk:{},wk:{},rt:{frames:[]},dl:{}};
+
+function initFlows(){
+  makeChips('buy-type',['ETF','股票','債券','基金','加密資產','其他'],F.buy,'type');
+  makeChips('buy-reason',['長期配置','估值便宜','跌深反彈','新聞題材','技術突破','朋友推薦','加碼原部位','其他'],F.buy,'reason');
+  makeChips('buy-hold',['短線','3–12 個月','1–3 年','3 年以上','不確定'],F.buy,'hold');
+  makeChips('buy-drop',['加碼','持有','停損','不知道'],F.buy,'drop');
+  makeChips('buy-exit',['已設好','想好了但沒寫下來','還沒有'],F.buy,'exit');
+
+  makeChips('sell-reason',['停利','停損','新聞影響','需要現金','看到更好的機會','害怕下跌','重新配置','其他'],F.sell,'reason');
+  makeChips('sell-pnl',['獲利','虧損','接近持平','不想填'],F.sell,'pnl');
+  makeChips('sell-invalid',['是','否','不確定'],F.sell,'invalid');
+  makeChips('sell-regret',['會','不會','不確定'],F.sell,'regret');
+
+  makeChips('risk-conc',['有，明顯集中','有一點','應該沒有','不確定'],F.risk,'conc');
+  makeChips('risk-dd',['10%','20%','30%','50% 以上','不確定'],F.risk,'dd');
+  makeChips('risk-cash12',['需要','可能需要','不需要'],F.risk,'cash12');
+
+  makeChips('wk-trade',['沒有','有 1–2 筆','有 3 筆以上','只有想，沒有動'],F.wk,'trade');
+  makeChips('wk-mood',['平穩','焦慮','興奮','後悔','無聊','FOMO'],F.wk,'mood');
+  makeChips('wk-rule',['不要追高','保留現金','少看新聞','檢查持倉','深紅日不賣'],F.wk,'rule');
+
+  makeChips('rt-frames',['長期指數投資','價值投資','總體循環','動能交易','風險管理','現金流投資','行為財務學','資產配置'],F.rt,'frames',{multi:true,max:5});
+
+  makeChips('dl-vibe',['樂觀','悲觀','恐慌','貪婪','觀望','混亂'],F.dl,'vibe');
+  makeChips('dl-want',['不想','想買','想賣','已經交易了'],F.dl,'want');
+  allocSum();
+}
+function allocSum(){
+  const ids=['al-cash','al-etf','al-stock','al-bond','al-other'];
+  const sum=ids.reduce((s,id)=>s+(+document.getElementById(id).value||0),0);
+  const el=document.getElementById('allocSum');
+  el.textContent='目前總和：'+sum+'%'+(sum===100?'':'（不用剛好 100，大概就好）');
+}
+
+/* ================= 歷史 ================= */
+function addHistory(type,label,prompt){
+  db.history.unshift({id:uid(),ts:Date.now(),date:todayISO(),type,label,prompt});
+  if(db.history.length>200)db.history.length=200;
+  save();
+}
+function renderHist(){
+  const el=document.getElementById('histList');
+  if(!db.history.length){
+    el.innerHTML='<div class="card"><p class="empty">還沒有紀錄。<br>用任何一個檢查工具，結果都會自動存在這裡。</p></div>';
+    return;
+  }
+  el.innerHTML=db.history.map(h=>`
+    <div class="hist-item" id="h-${h.id}">
+      <div onclick="toggleHist(${h.id})">
+        <span class="badge">${esc(h.type)}</span>
+        <h3>${esc(h.label)}</h3>
+        <div class="meta">${fmt(h.date)}</div>
+      </div>
+      <div class="hist-body">
+        <pre class="result-pre" style="max-height:260px;">${esc(h.prompt)}</pre>
+        <div class="cool-actions">
+          <button onclick="copyText(db.history.find(x=>x.id===${h.id}).prompt)">複製提示語</button>
+          <button onclick="delHist(${h.id})">刪除</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+function toggleHist(id){document.getElementById('h-'+id).classList.toggle('open');}
+function delHist(id){db.history=db.history.filter(h=>h.id!==id);save();renderHist();}
+
+/* ================= 提示語產生 ================= */
+const NO_ADVICE='請你扮演投資決策教練。你的任務不是告訴我該買或該賣，請不要提供任何直接的買賣建議、目標價或市場預測。請專注於檢查我的盲點、風險、情緒因素、隱含前提與決策品質。所有回答使用繁體中文。';
+
+function v(x,fallback){return x&&String(x).trim()?x:(fallback||'（未填）');}
+
+function genBuy(){
+  const name=document.getElementById('buyName').value.trim();
+  if(!name){toast('先填一下標的名稱');return;}
+  const p=`${NO_ADVICE}
+
+【我正在考慮的買入】
+標的：${name}
+資產類型：${v(F.buy.type)}
+買入原因：${v(F.buy.reason)}
+預計持有時間：${v(F.buy.hold)}
+如果買入後下跌 15%，我會：${v(F.buy.drop)}
+這筆交易占總資產比例：約 ${document.getElementById('buyPct').value}%
+退出條件：${v(F.buy.exit)}
+
+請依以下格式回答：
+1. 這筆交易最像哪一種類型？（長期配置／價值買入／動能追價／消息題材／攤平加碼）說明理由。
+2. 這筆交易的三個主要風險。
+3. 我可能正受到哪些情緒因素影響？（FOMO、錨定、過度自信、損失趨避等）
+4. 反方觀點：如果一位謹慎的投資人反對這筆交易，他最有力的三個理由是什麼？
+5. 進場前我必須能回答的三個問題。
+6. 綜合來看，這筆交易是否適合先放入 48 小時冷靜清單？為什麼？`;
+  document.getElementById('buy-pre').textContent=p;
+  document.getElementById('buy-form').style.display='none';
+  document.getElementById('buy-result').style.display='block';
+  F.buy._name=name;
+  addHistory('買入前檢查',name+'・'+v(F.buy.reason,'原因未填'),p);
+}
+function buyToCool(){
+  db.cool.unshift({
+    id:uid(),name:F.buy._name||'未命名',
+    reason:v(F.buy.reason,'未填'),
+    until:Date.now()+48*3600*1000,created:Date.now(),status:'waiting',resolution:null
+  });
+  save();toast('已放進冷靜清單，48 小時後再決定');
+}
+
+function genSell(){
+  const name=document.getElementById('sellName').value.trim();
+  if(!name){toast('先填一下標的名稱');return;}
+  const p=`${NO_ADVICE}
+
+【我正在考慮的賣出】
+標的：${name}
+原本買入理由：${v(document.getElementById('sellWhy').value)}
+現在想賣的原因：${v(F.sell.reason)}
+目前損益狀態：${v(F.sell.pnl)}
+我自己判斷原本買入理由是否失效：${v(F.sell.invalid)}
+如果賣出後繼續上漲，我會後悔嗎：${v(F.sell.regret)}
+
+請分析：
+1. 這次賣出比較像理性調整，還是情緒反應？依據是什麼？
+2. 客觀檢查：原本的買入理由是否真的失效？還是只是價格在動？
+3. 我是否可能受到短期新聞、價格波動或損益狀態的影響？
+4. 除了全部賣出，有沒有部分賣出、再平衡、設定觀察條件等替代方案？各自適合什麼情況？
+5. 按下賣出之前，我應該先確認的三個問題。`;
+  document.getElementById('sell-pre').textContent=p;
+  document.getElementById('sell-form').style.display='none';
+  document.getElementById('sell-result').style.display='block';
+  addHistory('賣出前檢查',name+'・'+v(F.sell.reason,'原因未填'),p);
+}
+
+function genRisk(){
+  const g=id=>document.getElementById(id).value||0;
+  const p=`${NO_ADVICE}
+
+【我的目前持倉概況】
+現金：約 ${g('al-cash')}%
+ETF：約 ${g('al-etf')}%
+單一股票：約 ${g('al-stock')}%
+債券：約 ${g('al-bond')}%
+其他：約 ${g('al-other')}%
+最大單一標的占比：約 ${document.getElementById('riskMax').value}%
+是否過度集中某產業或國家：${v(F.risk.conc)}
+我可承受的最大跌幅：${v(F.risk.dd)}
+未來 12 個月是否需要用到這筆錢：${v(F.risk.cash12)}
+
+請依序檢查：
+1. 集中度風險：這個組合最脆弱的地方在哪裡？
+2. 流動性風險：如果 12 個月內需要用錢，哪些部位可能出問題？
+3. 時間週期匹配：我的資金需求與資產的波動特性是否匹配？
+4. 是否有再平衡的需要？如果有，原則是什麼（不需要給具體標的）？
+5. 最重要的：這個組合裡，哪些風險不是靠多看新聞、多盯盤能解決的？
+最後請給我一份 5 題以內的「持倉自問清單」。`;
+  document.getElementById('risk-pre').textContent=p;
+  document.getElementById('risk-form').style.display='none';
+  document.getElementById('risk-result').style.display='block';
+  addHistory('持倉風險檢查','股票 '+g('al-stock')+'%・現金 '+g('al-cash')+'%・最大單一 '+document.getElementById('riskMax').value+'%',p);
+}
+
+function weekTickets(){
+  const lines=[];const d=new Date();
+  const wnames=['日','一','二','三','四','五','六'];
+  for(let i=6;i>=0;i--){
+    const pd=new Date(d);pd.setDate(d.getDate()-i);
+    const r=db.records[iso(pd)];
+    if(r)lines.push(`${iso(pd)}（週${wnames[pd.getDay()]}）：${[r.color,r.mood,r.market,r.action].filter(Boolean).join(' / ')}${r.note?'，備註：'+r.note:''}`);
+  }
+  return lines;
+}
+function genWeekly(){
+  const custom=document.getElementById('wkRuleCustom').value.trim();
+  const rule=custom||F.wk.rule||'';
+  const tickets=weekTickets();
+  const coolLines=db.cool.filter(c=>c.created>Date.now()-7*86400000)
+    .map(c=>`・${c.name}（原因：${c.reason}${c.resolution?'，冷靜結果：'+c.resolution:'，冷靜中'}）`);
+  const p=`請你扮演投資行為教練，不要提供任何直接的買賣建議或市場預測。請根據以下紀錄分析我的投資行為模式。所有回答使用繁體中文。
+
+【本週概況】
+本週交易狀況：${v(F.wk.trade)}
+本週整體情緒：${v(F.wk.mood)}
+最想檢討的一筆交易：${v(document.getElementById('wkReview').value,'（沒有特別想檢討的）')}
+本週最影響我的市場事件：${v(document.getElementById('wkEvent').value,'（沒有特別記得的）')}
+我自己想設的下週規則：${v(rule,'（還沒想到）')}
+
+【過去 7 天每日色票紀錄】（帳戶顏色 / 心情 / 盤勢 / 行為）
+${tickets.length?tickets.join('\n'):'（這週沒有每日紀錄）'}
+
+【本週冷靜清單】
+${coolLines.length?coolLines.join('\n'):'（無）'}
+
+請回答：
+1. 我這週最明顯的行為模式是什麼？
+2. 有沒有追高、恐慌、過度交易、過度自信的跡象？證據是哪幾天？
+3. 最值得複盤的一筆交易（或一次「想動卻沒動」）是哪個？為什麼？
+4. 我設的下週規則合理嗎？請幫我改成一條更具體、可執行的版本（一句話）。`;
+  document.getElementById('weekly-pre').textContent=p;
+  document.getElementById('weekly-form').style.display='none';
+  document.getElementById('weekly-result').style.display='block';
+  if(rule){db.weekRule=rule;}
+  addHistory('每週回顧','情緒：'+v(F.wk.mood,'未填')+'・交易：'+v(F.wk.trade,'未填'),p);
+  renderHome();
+}
+
+function genRound(){
+  const q=document.getElementById('rtQ').value.trim();
+  const frames=F.rt.frames||[];
+  if(frames.length<2){toast('至少選 2 個框架');return;}
+  if(!q){toast('先寫下你想討論的問題');return;}
+  const p=`請你主持一場投資觀念圓桌。參與者不是真實人物，而是以下幾種公開的投資框架：${frames.join('、')}。
+請不要模仿任何真實作者的語氣或自稱本人，只使用這些框架的公開觀念。不要提供直接的買賣建議或市場預測。所有回答使用繁體中文。
+
+【我的問題】
+${q}
+
+請依序進行：
+1. 每個框架分別最關心這個問題的哪 2–3 件事？會先問我什麼？
+2. 這些框架之間「真正的分歧」在哪裡？各自依賴什麼前提？如果前提錯了會怎樣？
+3. 它們共同同意的風險是什麼？
+4. 哪一個框架的答案最依賴對未來的預測？這是弱點嗎？
+5. 最後，整理一份 5 題以內的「決策檢查清單」，讓我自己回答完再做決定。`;
+  document.getElementById('round-pre').textContent=p;
+  document.getElementById('round-form').style.display='none';
+  document.getElementById('round-result').style.display='block';
+  addHistory('觀念圓桌',q.length>24?q.slice(0,24)+'…':q,p);
+}
+
+function genDaily(){
+  const news=document.getElementById('dailyNews').value.trim();
+  const p=`【今日市場背景紀錄】${todayISO()}
+市場大事：${v(news,'（沒有特別記下）')}
+市場氣氛：${v(F.dl.vibe)}
+我今天想交易嗎：${v(F.dl.want)}
+
+——
+如果要請 AI 分析，請接著問：
+請根據以上今日市場背景，提醒我今天做投資決策時，最容易出現哪兩種情緒偏誤？在這種氣氛下，歷史上投資人常犯什麼錯？不要提供買賣建議，所有回答使用繁體中文。`;
+  document.getElementById('daily-pre').textContent=p;
+  document.getElementById('daily-form').style.display='none';
+  document.getElementById('daily-result').style.display='block';
+  addHistory('每日市場背景',v(F.dl.vibe,'氣氛未填')+'・'+(news?(news.length>18?news.slice(0,18)+'…':news):'無大事'),p);
+}
+
+/* ================= 今日色票 ================= */
+const picked={color:null,mood:null,market:null,action:null,coolReason:null,coolHours:48};
+function initTodayChips(){
+  makeChips('g-color',COLORS,picked,'color',{fmt:o=>`<span class="dot" style="background:${o.hex}"></span>${o.k}`,onPick:checkImpulse});
+  makeChips('g-mood',MOODS,picked,'mood');
+  makeChips('g-market',MARKETS,picked,'market');
+  makeChips('g-action',ACTIONS,picked,'action',{onPick:checkImpulse});
+  makeChips('g-coolReason',COOL_REASONS,picked,'coolReason');
+  makeChips('g-coolHours',COOL_HOURS,picked,'coolHours',{valueKey:'h'});
+  document.getElementById('g-coolHours').children[1].classList.add('sel');
+}
+function prevDays(n){
+  const out=[];const d=new Date();
+  for(let i=1;i<=n;i++){const p=new Date(d);p.setDate(d.getDate()-i);out.push(db.records[iso(p)]||null);}
+  return out;
+}
+function impulseMsg(rec){
+  const red=k=>k==='淺紅'||k==='深紅';
+  const green=k=>k==='淺綠'||k==='深綠';
+  const [y1,y2]=prevDays(2);
+  const msgs=[];
+  if(red(rec.color)&&y1&&red(y1.color)&&(rec.action==='想賣'||rec.action==='有賣'))
+    msgs.push('連續下跌後想賣出，可能是虧損後的情緒反應。深紅日不賣，先放一晚再說。');
+  if(green(rec.color)&&y1&&green(y1.color)&&y2&&green(y2.color)&&(rec.action==='想買'||rec.action==='有買'))
+    msgs.push('連續上漲後想加碼，小心獲利後的過度自信。漲多不是買進理由。');
+  if(rec.market==='震盪'&&rec.mood==='無感'&&(rec.action==='想買'||rec.action==='有買'))
+    msgs.push('震盪盤＋無感時的交易，常常不是機會，而是手癢。');
+  if(rec.action==='想買')
+    msgs.push('想買的標的，可以先放進「冷靜清單」，48 小時後再決定。');
+  return msgs;
+}
+function checkImpulse(){
+  const w=document.getElementById('impulseWarn');
+  if(!picked.color||!picked.action){w.classList.remove('show');return;}
+  const msgs=impulseMsg(picked);
+  if(msgs.length){w.innerHTML=msgs.map(m=>SVGI.leaf+m).join('<br>');w.classList.add('show');}
+  else w.classList.remove('show');
+}
+function saveToday(){
+  if(!picked.color){toast('先選一個帳戶顏色吧');return;}
+  db.records[todayISO()]={
+    color:picked.color,mood:picked.mood,market:picked.market,action:picked.action,
+    note:document.getElementById('note').value.trim(),ts:Date.now()
+  };
+  save();renderToday();renderCal();toast('已放進罐子 ✓');
+}
+function editToday(){
+  const rec=db.records[todayISO()];
+  document.getElementById('recordForm').style.display='block';
+  document.getElementById('savedView').style.display='none';
+  if(rec){
+    picked.color=rec.color;picked.mood=rec.mood;picked.market=rec.market;picked.action=rec.action;
+    document.getElementById('note').value=rec.note||'';
+    syncChips('g-color',COLORS.map(c=>c.k),rec.color);
+    syncChips('g-mood',MOODS,rec.mood);
+    syncChips('g-market',MARKETS,rec.market);
+    syncChips('g-action',ACTIONS,rec.action);
+    checkImpulse();
+  }
+}
+function syncChips(id,keys,val){
+  const el=document.getElementById(id);
+  [...el.children].forEach((c,i)=>c.classList.toggle('sel',keys[i]===val));
+}
+function renderToday(){
+  document.getElementById('todayDate').textContent=fmt(todayISO())+'，今天的你還好嗎？';
+  const rec=db.records[todayISO()];
+  if(rec){
+    document.getElementById('recordForm').style.display='none';
+    document.getElementById('savedView').style.display='block';
+    document.getElementById('savedDate').textContent=fmt(todayISO());
+    document.getElementById('savedBead').style.background=colorOf(rec.color);
+    const tags=[rec.color,rec.mood,rec.market,rec.action].filter(Boolean);
+    document.getElementById('savedTags').innerHTML=tags.map(t=>`<span class="tag">${t}</span>`).join('');
+    document.getElementById('savedNote').textContent=rec.note||'';
+    const w=document.getElementById('savedWarn');
+    const msgs=impulseMsg(rec);
+    if(msgs.length){w.innerHTML=msgs.map(m=>SVGI.leaf+m).join('<br>');w.classList.add('show');}
+    else w.classList.remove('show');
+  }else{
+    document.getElementById('recordForm').style.display='block';
+    document.getElementById('savedView').style.display='none';
+  }
+}
+function renderHome(){
+  const rule=db.weekRule;
+  document.getElementById('weekRule').style.display=rule?'block':'none';
+  if(rule)document.getElementById('weekRuleText').textContent=rule;
+}
+
+/* ================= 月曆 ================= */
+let calY,calM;
+function initCal(){const d=new Date();calY=d.getFullYear();calM=d.getMonth();}
+function moveMonth(n){calM+=n;if(calM<0){calM=11;calY--;}if(calM>11){calM=0;calY++;}renderCal();}
+function renderCal(){
+  document.getElementById('calTitle').textContent=`${calY} 年 ${calM+1} 月`;
+  const grid=document.getElementById('calGrid');grid.innerHTML='';
+  ['一','二','三','四','五','六','日'].forEach(w=>{
+    const e=document.createElement('div');e.className='wd';e.textContent=w;grid.appendChild(e);
+  });
+  const first=new Date(calY,calM,1);
+  let offset=(first.getDay()+6)%7;
+  for(let i=0;i<offset;i++)grid.appendChild(document.createElement('div'));
+  const days=new Date(calY,calM+1,0).getDate();
+  let stats={green:0,red:0,trade:0,total:0};
+  for(let d=1;d<=days;d++){
+    const dISO=iso(new Date(calY,calM,d));
+    const rec=db.records[dISO];
+    const cell=document.createElement('button');cell.className='cal-cell';
+    if(dISO===todayISO())cell.classList.add('today');
+    if(rec){
+      cell.classList.add('has');
+      const bead=document.createElement('div');bead.className='bead';
+      bead.style.background=colorOf(rec.color);cell.appendChild(bead);
+      stats.total++;
+      if(rec.color==='深綠'||rec.color==='淺綠')stats.green++;
+      if(rec.color==='深紅'||rec.color==='淺紅')stats.red++;
+      if(rec.action==='有買'||rec.action==='有賣')stats.trade++;
+    }
+    const sp=document.createElement('span');sp.textContent=d;cell.appendChild(sp);
+    cell.onclick=()=>showDay(dISO);
+    grid.appendChild(cell);
+  }
+  document.getElementById('calStats').innerHTML=`
+    <div class="stat"><b>${stats.total}</b><span>記錄天數</span></div>
+    <div class="stat"><b style="color:var(--c-dgreen)">${stats.green}</b><span>綠色日</span></div>
+    <div class="stat"><b style="color:var(--c-dred)">${stats.red}</b><span>紅色日</span></div>
+    <div class="stat"><b>${stats.trade}</b><span>交易日</span></div>`;
+  document.getElementById('dayDetail').classList.remove('show');
+}
+function showDay(dISO){
+  const rec=db.records[dISO];
+  const el=document.getElementById('dayDetail');
+  if(!rec){
+    el.innerHTML=`<h2>${fmt(dISO)}</h2><p class="empty" style="padding:10px;">這天沒有紀錄。</p>`;
+  }else{
+    const tags=[rec.color,rec.mood,rec.market,rec.action].filter(Boolean)
+      .map(t=>`<span class="tag">${t}</span>`).join('');
+    el.innerHTML=`<h2>${fmt(dISO)}</h2>
+      <div class="tagline" style="justify-content:flex-start;margin-top:10px;">${tags}</div>
+      ${rec.note?`<p style="font-size:14px;color:var(--ink-soft);margin-top:8px;line-height:1.6;">「${esc(rec.note)}」</p>`:''}`;
+  }
+  el.classList.add('show');
+}
+
+/* ================= 冷靜清單 ================= */
+function addCool(){
+  const name=document.getElementById('coolName').value.trim();
+  if(!name){toast('先填一下標的名稱');return;}
+  db.cool.unshift({
+    id:uid(),name,reason:picked.coolReason||'未填',
+    until:Date.now()+(picked.coolHours||48)*3600*1000,
+    created:Date.now(),status:'waiting',resolution:null
+  });
+  save();
+  document.getElementById('coolName').value='';
+  renderCool();
+  toast('已放進冷靜清單 ✓');
+}
+function resolveCool(id,res){
+  const it=db.cool.find(c=>c.id===id);if(!it)return;
+  it.status='done';it.resolution=res;save();renderCool();
+  toast(res==='不想了'?'又擋下一筆衝動 ✓':'已記錄 ✓');
+}
+function removeCool(id){db.cool=db.cool.filter(c=>c.id!==id);save();renderCool();}
+function renderCool(){
+  const el=document.getElementById('coolList');
+  if(!db.cool.length){
+    el.innerHTML=`<div class="card"><p class="empty">清單是空的。<br>下次手癢想買的時候，先把它放進來。</p></div>`;
+    return;
+  }
+  el.innerHTML=db.cool.map(it=>{
+    const left=it.until-Date.now();
+    const expired=left<=0;
+    let body='';
+    if(it.status==='done'){
+      const icon=COOL_ICONS[it.resolution]||'';
+      body=`<div class="resolved">${icon}冷靜結果：${it.resolution}</div>
+        <div class="cool-actions"><button onclick="removeCool(${it.id})">移除</button></div>`;
+    }else if(expired){
+      body=`<div class="countdown">${SVGI.clock}冷靜期已到，你還想買嗎？</div>
+        <div class="cool-actions">
+          <button onclick="resolveCool(${it.id},'還想買')">還想買</button>
+          <button onclick="resolveCool(${it.id},'不想了')">不想了</button>
+          <button onclick="resolveCool(${it.id},'要再看')">要再看</button>
+        </div>`;
+    }else{
+      const h=Math.floor(left/3600000),m=Math.floor(left%3600000/60000);
+      body=`<div class="countdown">${SVGI.candle}還要冷靜 ${h} 小時 ${m} 分</div>
+        <div class="cool-actions"><button onclick="removeCool(${it.id})">移除</button></div>`;
+    }
+    return `<div class="cool-item ${expired&&it.status!=='done'?'expired':''}">
+      <h3>${esc(it.name)}</h3>
+      <div class="meta">想買原因：${esc(it.reason)}・${new Date(it.created).toLocaleDateString('zh-TW')} 放入</div>
+      ${body}</div>`;
+  }).join('');
+}
+
+/* ================= 匯出入 ================= */
+function exportJSON(){
+  const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`投資觀念研究室備份_${todayISO()}.json`;
+  a.click();
+  toast('已匯出備份');
+}
+function importJSON(input){
+  const f=input.files[0];if(!f)return;
+  const rd=new FileReader();
+  rd.onload=()=>{
+    try{
+      const data=JSON.parse(rd.result);
+      if(!data.records)throw 0;
+      data.history=data.history||[];data.cool=data.cool||[];data.weekRule=data.weekRule||'';
+      db=data;save();
+      renderAll();toast('已匯入備份 ✓');closeModal();
+    }catch(e){toast('檔案格式不正確');}
+  };
+  rd.readAsText(f);input.value='';
+}
+function clearAll(){
+  if(confirm('確定要清除所有紀錄嗎？這個動作無法復原。')){
+    db={records:{},cool:[],weekRule:'',history:[]};save();
+    renderAll();closeModal();toast('已清除');
+  }
+}
+
+/* ================= 導覽 ================= */
+const SCREENS=['home','buy','sell','risk','weekly','round','daily','today','cal','cool','hist'];
+const TABS=['home','today','cal','cool','hist'];
+function show(s){
+  SCREENS.forEach(k=>document.getElementById('scr-'+k).classList.toggle('on',k===s));
+  TABS.forEach(k=>document.getElementById('tab-'+k).classList.toggle('on',k===s||( !TABS.includes(s)&&k==='home')));
+  window.scrollTo(0,0);
+}
+function go(s){
+  show(s);
+  if(s==='home')renderHome();
+  if(s==='cal')renderCal();
+  if(s==='cool')renderCool();
+  if(s==='hist')renderHist();
+}
+function goHome(){go('home');}
+function resetFlow(f){
+  // 清掉結果畫面，回到表單（保留上次填的內容比較貼心，不重置欄位）
+  document.getElementById(f+'-form').style.display='block';
+  document.getElementById(f+'-result').style.display='none';
+}
+function goFlow(f){
+  const map={buy:'buy',sell:'sell',risk:'risk',weekly:'weekly',round:'round',daily:'daily'};
+  resetFlow(map[f]);
+  show(map[f]);
+}
+function openModal(){document.getElementById('modalBg').classList.add('show');}
+function closeModal(){document.getElementById('modalBg').classList.remove('show');}
+
+/* ================= 啟動 ================= */
+function renderAll(){renderHome();renderToday();renderCal();renderCool();renderHist();}
+initFlows();initTodayChips();initCal();renderAll();
+setInterval(()=>{if(document.getElementById('scr-cool').classList.contains('on'))renderCool();},60000);
+</script>
+</body>
+</html>
